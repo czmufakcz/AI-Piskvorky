@@ -140,7 +140,7 @@ public class State {
         for (int i = 0; i < WIDTH; i++) {
             stringBuilder.append("{");
             for (int j = 0; j < HEIGHT; j++) {
-                stringBuilder.append(board[i][j]);
+                stringBuilder.append(board[i][j] + " , ");
             }
             stringBuilder.append("}" + System.lineSeparator());
         }
