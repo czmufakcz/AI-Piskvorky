@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -11,7 +12,21 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 public class Game {
-    private Position posittion = new Position();
+    private State state;
+    private PIECE_TYPE piece = PIECE_TYPE.O;
+    private static Game instance = null;
+
+    private Game() {
+        state = new State();
+    }
+
+    public static Game getInstance() {
+        if (instance == null) {
+            instance = new Game();
+        }
+        return instance;
+    }
+
     public static void main(String[] args) {
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -30,7 +45,7 @@ public class Game {
                     button.setPreferredSize(new Dimension(100, 100));
                     button.setBackground(Color.WHITE);
                     button.setOpaque(true);
-                    button.setFont(new Font(null, Font.PLAIN, 100));
+                    button.setFont(new Font(null, Font.PLAIN, 50));
                     button.addMouseListener(new MouseListener() {
 
                         @Override
@@ -59,21 +74,22 @@ public class Game {
 
                         @Override
                         public void mouseClicked(MouseEvent e) {
-                            button.setText("" + game.posittion.getTurn());
-                            game.move(idx);
-                            if (!game.posittion.gameEnd()) {
-                                int best = game.posittion.bestMove();
-                                buttons[best].setText("" + game.posittion.getTurn());
-                                game.move(best);
-
+                            Game game = Game.getInstance();
+                            button.setText("" + game.piece);
+                            game.state.setMove(game.piece, getPointIn2DArray(idx));
+                            if (!game.state.isEnd()) {
+                                Minimax minimax = new Minimax(PIECE_TYPE.getReverseTurn(game.piece));
+                                minimax.minimax(0, PIECE_TYPE.getReverseTurn(game.piece), game.state);
+                                game.state.setMove(PIECE_TYPE.getReverseTurn(game.piece), Minimax.computerMove);
+                                buttons[Minimax.computerMove.x * 3 + Minimax.computerMove.y].setText("" + PIECE_TYPE.getReverseTurn(game.piece));
                             }
-                            if (game.posittion.gameEnd()) {
+                            if (game.state.isEnd()) {
                                 String message = "";
-                                if (game.posittion.win('x')) {
-                                    message = "You won";
+                                if (game.state.winner() == PIECE_TYPE.O) {
+                                    message = "WIN O";
 
-                                } else if (game.posittion.win('o')) {
-                                    message = "Computer won";
+                                } else if (game.state.winner() == PIECE_TYPE.X) {
+                                    message = "WIN X";
                                 } else {
                                     message = "Draw";
                                 }
@@ -93,8 +109,10 @@ public class Game {
 
     }
 
-    private void move(int idx) {
-        posittion = posittion.move(idx);
+    public static Point getPointIn2DArray(int index) {
+        return new Point(index / 3, index % 3);
+
     }
+
 
 }

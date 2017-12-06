@@ -9,6 +9,11 @@ public class State {
 
     public State() {
         board = new CELL_TYPE[WIDTH][HEIGHT];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board.length; j++) {
+                board[i][j] = CELL_TYPE.EMPTY;
+            }
+        }
     }
 
     public State(CELL_TYPE board[][]) {
@@ -24,10 +29,10 @@ public class State {
 
     public ArrayList<Point> getMoves() {
         ArrayList<Point> listMoves = new ArrayList<>();
-         for (int i = 0; i < WIDTH; i++) {
-            for (int j = 0; j < HEIGHT; j++) {
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
                 if (board[i][j] == CELL_TYPE.EMPTY) {
-                    listMoves.add(new Point(i, j));
+                    listMoves.add(new Point(j, i));
                 }
             }
         }
@@ -121,12 +126,16 @@ public class State {
     }
 
     public void setMove(PIECE_TYPE piece, Point point) {
+        if (board[point.y][point.x] != CELL_TYPE.EMPTY) {
+            throw new IllegalArgumentException("This cordinate is no empty.");
+        }
+
         switch (piece) {
         case O:
-            board[point.x][point.y] = CELL_TYPE.O;
+            board[point.y][point.x] = CELL_TYPE.O;
             break;
         case X:
-            board[point.x][point.y] = CELL_TYPE.X;
+            board[point.y][point.x] = CELL_TYPE.X;
             break;
 
         default:
@@ -145,6 +154,9 @@ public class State {
             stringBuilder.append("}" + System.lineSeparator());
         }
         return stringBuilder.toString();
+    }
 
+    public boolean isBlocked(Point point, CELL_TYPE cell) {
+        return board[point.y][point.x] == cell;
     }
 }

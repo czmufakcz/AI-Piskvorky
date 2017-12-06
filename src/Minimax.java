@@ -2,90 +2,69 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 public class Minimax {
-    private PIECE_TYPE turn;
+    private PIECE_TYPE realTurn;
+    public static Point computerMove;
 
     public Minimax(PIECE_TYPE piece) {
-        this.turn = piece;
+        this.realTurn = piece;
     }
+
+
 
     /**
      * Returns the best move given the state of the game
      */
-    public Point minimax(State state) {
-        Point bestMove = null;
-        int highestScore = Integer.MIN_VALUE;
+    public int minimax(int depth, PIECE_TYPE turn, State state) {
+        if (state.isEnd())
+            return eval(state);
+
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
 
         ArrayList<Point> moves = state.getMoves();
-        int score = 0;
+
         for (Point move : moves) {
             State clone = new State(state);
-            clone.setMove(PIECE_TYPE.O, move);
-            score = min(clone, 0);
-            if (score > highestScore) {
-                highestScore = score;
-                bestMove = move;
+
+            if (turn == realTurn) {
+                clone.setMove(turn, move);
+                int currentScore = minimax(depth + 1, PIECE_TYPE.getReverseTurn(turn), clone);
+                max = Math.max(currentScore, max);
+                
+                if (currentScore >= 0) {
+                    if (depth == 0)
+                        computerMove = move;
+                }
+
+                if (moves.get(moves.size() - 1) == move && max < 0) {
+                    if (depth == 0)
+                        computerMove = move;
+                }
+
+            } else {
+                clone.setMove(turn, move);
+                int currentScore = minimax(depth + 1, PIECE_TYPE.getReverseTurn(turn), clone);
+                min = Math.min(currentScore, min);
             }
+
+       
         }
 
-        return bestMove;
-    }
-
-    /**
-     * Returns the lowest score received by the min player
-     */
-    private int min(State state, int depth) {
-        if (state.isEnd())
-            return eval(state, depth);
-
-        int lowestScore = Integer.MAX_VALUE;
-
-        ArrayList<Point> moves = state.getMoves();
-        int score = 0;
-        for (Point move : moves) {
-            State clone = new State(state);
-            clone.setMove(PIECE_TYPE.X, move);
-            score = max(clone, ++depth);
-            if (score < lowestScore)
-                lowestScore = score;
-        }
-
-        return lowestScore;
-    }
-
-    /**
-     * Returns the highest score received by the max player
-     */
-    private int max(State state, int depth) {
-        if (state.isEnd())
-            return eval(state, depth);
-
-        int highestScore = Integer.MIN_VALUE;
-
-        ArrayList<Point> moves = state.getMoves();
-        int score = 0;
-        for (Point move : moves) {
-            State clone = new State(state);
-            clone.setMove(PIECE_TYPE.O, move);
-            score = min(clone, ++depth);
-            if (score > highestScore)
-                highestScore = score;
-        }
-
-        return highestScore;
+        return turn == realTurn ? max : min;
     }
 
     /**
      * Returns 1 if the AI is the winner
      */
-    private int eval(State state, int depth) {
+    private int eval(State state) {
         PIECE_TYPE piece = state.winner();
         if (piece == PIECE_TYPE.DRAW) {
             return 0;
         }
-        if (piece == this.turn)
-            return 1 - depth;
+        if (piece == this.realTurn)
+            return 1;
         else
-            return depth - 1;
+            return -1;
     }
 
 }
