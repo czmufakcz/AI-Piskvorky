@@ -11,7 +11,7 @@ public class State {
         board = new CELL_TYPE[WIDTH][HEIGHT];
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board.length; j++) {
-                board[i][j] = CELL_TYPE.EMPTY;
+                board[i][j] = CELL_TYPE._;
             }
         }
     }
@@ -31,7 +31,7 @@ public class State {
         ArrayList<Point> listMoves = new ArrayList<>();
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
-                if (board[i][j] == CELL_TYPE.EMPTY) {
+                if (board[i][j] == CELL_TYPE._) {
                     listMoves.add(new Point(j, i));
                 }
             }
@@ -126,7 +126,7 @@ public class State {
     }
 
     public void setMove(PIECE_TYPE piece, Point point) {
-        if (board[point.y][point.x] != CELL_TYPE.EMPTY) {
+        if (board[point.y][point.x] != CELL_TYPE._) {
             throw new IllegalArgumentException("This cordinate is no empty.");
         }
 

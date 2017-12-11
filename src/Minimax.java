@@ -9,6 +9,9 @@ public class Minimax {
         this.realTurn = piece;
     }
 
+    public void setPieceType(PIECE_TYPE realTurn) {
+        this.realTurn = realTurn;
+    }
 
 
     /**
@@ -16,7 +19,7 @@ public class Minimax {
      */
     public int minimax(int depth, PIECE_TYPE turn, State state) {
         if (state.isEnd())
-            return eval(state);
+            return eval(state, depth);
 
         int min = Integer.MAX_VALUE;
         int max = Integer.MIN_VALUE;
@@ -31,7 +34,7 @@ public class Minimax {
                 int currentScore = minimax(depth + 1, PIECE_TYPE.getReverseTurn(turn), clone);
                 max = Math.max(currentScore, max);
                 
-                if (currentScore >= 0) {
+                if (currentScore >= max) {
                     if (depth == 0)
                         computerMove = move;
                 }
@@ -56,15 +59,15 @@ public class Minimax {
     /**
      * Returns 1 if the AI is the winner
      */
-    private int eval(State state) {
+    private int eval(State state, int depth) {
         PIECE_TYPE piece = state.winner();
         if (piece == PIECE_TYPE.DRAW) {
             return 0;
         }
         if (piece == this.realTurn)
-            return 1;
+            return 10 - depth;
         else
-            return -1;
+            return depth - 10;
     }
 
 }
