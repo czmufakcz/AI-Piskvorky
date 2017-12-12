@@ -1,72 +1,76 @@
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.awt.Point;
 
 import org.junit.Test;
 
 public class MinimaxTest {
 
     @Test
-    public void test() {
-        Minimax minimax = new Minimax(PIECE_TYPE.O);
-        CELL_TYPE board[][] = new CELL_TYPE[][] { { CELL_TYPE.X, CELL_TYPE.O, CELL_TYPE.X },
-                { CELL_TYPE.O, CELL_TYPE.O, CELL_TYPE.X },
-                { CELL_TYPE.X, CELL_TYPE._, CELL_TYPE.O } };
-
-        State state = new State(board);
-        minimax.minimax(0, PIECE_TYPE.O, state);
-        state.setMove(PIECE_TYPE.O, Minimax.computerMove);
-
-        assertEquals(PIECE_TYPE.O, state.winner());
-    }
-
-    @Test
-    public void test1() {
-        Minimax minimax = new Minimax(PIECE_TYPE.O);
-        CELL_TYPE board[][] = new CELL_TYPE[][] { { CELL_TYPE.X, CELL_TYPE.O, CELL_TYPE._ },
-                { CELL_TYPE.X, CELL_TYPE.O, CELL_TYPE.X },
+    public void test2() {
+        // VARIANTA A START X -> REMIZA
+        Minimax minimax = new Minimax(PIECE_TYPE.X);
+        CELL_TYPE board[][] = new CELL_TYPE[][] { { CELL_TYPE._, CELL_TYPE._, CELL_TYPE._ },
+                { CELL_TYPE._, CELL_TYPE._, CELL_TYPE._ },
                 { CELL_TYPE._, CELL_TYPE._, CELL_TYPE._ } };
 
         State state = new State(board);
-        minimax.minimax(0, PIECE_TYPE.O, state);
-        state.setMove(PIECE_TYPE.O, Minimax.computerMove);
 
-        assertEquals(PIECE_TYPE.O, state.winner());
-    }
+        while (!state.isEnd()) {
 
-    @Test
-    public void test2() {
-        Minimax minimax = new Minimax(PIECE_TYPE.O);
-        CELL_TYPE board[][] = new CELL_TYPE[][] { { CELL_TYPE.O, CELL_TYPE.X, CELL_TYPE._ },
-                { CELL_TYPE.X, CELL_TYPE.O, CELL_TYPE.O },
-                { CELL_TYPE._, CELL_TYPE.X, CELL_TYPE._ } };
+            if (minimax.pieceType() == PIECE_TYPE.X) {
+                // X
+                state.setMove(PIECE_TYPE.X, minimax.bestMove(PIECE_TYPE.X, state));
+                System.out.println(state.toString());
+                System.out.println("");
+                minimax.setPieceType(PIECE_TYPE.O);
+            } else {
+                // O
+                state.setMove(PIECE_TYPE.O, minimax.bestMove(PIECE_TYPE.O, state));
+                System.out.println(state.toString());
+                System.out.println("");
+                minimax.setPieceType(PIECE_TYPE.X);
+            }
 
-        State state = new State(board);
-        minimax.minimax(0, PIECE_TYPE.O, state);
-        state.setMove(PIECE_TYPE.O, Minimax.computerMove);
+        }
 
-        assertEquals(PIECE_TYPE.O, state.winner());
+        assertEquals(PIECE_TYPE.DRAW, state.winner());
+
     }
 
     @Test
     public void test3() {
-        Minimax minimax = new Minimax(PIECE_TYPE.X);
-
-        CELL_TYPE board[][] = new CELL_TYPE[][] { { CELL_TYPE.X, CELL_TYPE.O, CELL_TYPE.X },
-                { CELL_TYPE.O, CELL_TYPE.O, CELL_TYPE.X },
-                { CELL_TYPE.X, CELL_TYPE._, CELL_TYPE.O } };
+        // VARIANTA A START O -> REMIZA
+        Minimax minimax = new Minimax(PIECE_TYPE.O);
+        CELL_TYPE board[][] = new CELL_TYPE[][] { { CELL_TYPE._, CELL_TYPE._, CELL_TYPE._ },
+                { CELL_TYPE._, CELL_TYPE._, CELL_TYPE._ },
+                { CELL_TYPE._, CELL_TYPE._, CELL_TYPE._ } };
 
         State state = new State(board);
-        minimax.minimax(0, PIECE_TYPE.X, state);
-        state.setMove(PIECE_TYPE.X, Minimax.computerMove);
+
+        while (!state.isEnd()) {
+
+            if (minimax.pieceType() == PIECE_TYPE.X) {
+                // X
+                state.setMove(PIECE_TYPE.X, minimax.bestMove(PIECE_TYPE.X, state));
+                System.out.println(state.toString());
+                System.out.println("");
+                minimax.setPieceType(PIECE_TYPE.O);
+            } else {
+                // O
+                state.setMove(PIECE_TYPE.O, minimax.bestMove(PIECE_TYPE.O, state));
+                System.out.println(state.toString());
+                System.out.println("");
+                minimax.setPieceType(PIECE_TYPE.X);
+            }
+
+        }
 
         assertEquals(PIECE_TYPE.DRAW, state.winner());
+
     }
 
     @Test
     public void test4() {
-        // VARIANTA B START X
+        // VARIANTA B START X -> REMIZA
         Minimax minimax = new Minimax(PIECE_TYPE.X);
         CELL_TYPE board[][] = new CELL_TYPE[][] { { CELL_TYPE.X, CELL_TYPE.O, CELL_TYPE._ },
                 { CELL_TYPE._, CELL_TYPE.O, CELL_TYPE.X },
@@ -74,40 +78,23 @@ public class MinimaxTest {
 
         State state = new State(board);
 
-        // X
-        minimax.minimax(0, PIECE_TYPE.X, state);
-        state.setMove(PIECE_TYPE.X, Minimax.computerMove);
-        System.out.println(state.toString());
-        System.out.println("");
-        assertTrue(state.isBlocked(new Point(1, 2), CELL_TYPE.X));
+        while (!state.isEnd()) {
 
-        // O
-        minimax.setPieceType(PIECE_TYPE.O);
-        minimax.minimax(0, PIECE_TYPE.O, state);
-        state.setMove(PIECE_TYPE.O, Minimax.computerMove);
-        System.out.println(state.toString());
-        System.out.println("");
+            if (minimax.pieceType() == PIECE_TYPE.X) {
+                // X
+                state.setMove(PIECE_TYPE.X, minimax.bestMove(PIECE_TYPE.X, state));
+                System.out.println(state.toString());
+                System.out.println("");
+                minimax.setPieceType(PIECE_TYPE.O);
+            } else {
+                // O
+                state.setMove(PIECE_TYPE.O, minimax.bestMove(PIECE_TYPE.O, state));
+                System.out.println(state.toString());
+                System.out.println("");
+                minimax.setPieceType(PIECE_TYPE.X);
+            }
 
-        // X
-        minimax.setPieceType(PIECE_TYPE.X);
-        minimax.minimax(0, PIECE_TYPE.X, state);
-        state.setMove(PIECE_TYPE.X, Minimax.computerMove);
-        System.out.println(state.toString());
-        System.out.println("");
-
-        // O
-        minimax.setPieceType(PIECE_TYPE.O);
-        minimax.minimax(0, PIECE_TYPE.O, state);
-        state.setMove(PIECE_TYPE.O, Minimax.computerMove);
-        System.out.println(state.toString());
-        System.out.println("");
-
-        // X
-        minimax.setPieceType(PIECE_TYPE.X);
-        minimax.minimax(0, PIECE_TYPE.X, state);
-        state.setMove(PIECE_TYPE.X, Minimax.computerMove);
-        System.out.println(state.toString());
-        System.out.println("");
+        }
 
         assertEquals(PIECE_TYPE.DRAW, state.winner());
 
@@ -115,7 +102,7 @@ public class MinimaxTest {
 
     @Test
     public void test5() {
-        // VARIANTA B START O WIN po prvnim tahu
+        // VARIANTA B START -> O WIN
         Minimax minimax = new Minimax(PIECE_TYPE.O);
         CELL_TYPE board[][] = new CELL_TYPE[][] { { CELL_TYPE.X, CELL_TYPE.O, CELL_TYPE._ },
                 { CELL_TYPE._, CELL_TYPE.O, CELL_TYPE.X },
@@ -123,11 +110,23 @@ public class MinimaxTest {
 
         State state = new State(board);
 
-        // O
-        minimax.minimax(0, PIECE_TYPE.O, state);
-        state.setMove(PIECE_TYPE.O, Minimax.computerMove);
-        System.out.println(state.toString());
-        System.out.println("");
+        while (!state.isEnd()) {
+
+            if (minimax.pieceType() == PIECE_TYPE.X) {
+                // X
+                state.setMove(PIECE_TYPE.X, minimax.bestMove(PIECE_TYPE.X, state));
+                System.out.println(state.toString());
+                System.out.println("");
+                minimax.setPieceType(PIECE_TYPE.O);
+            } else {
+                // O
+                state.setMove(PIECE_TYPE.O, minimax.bestMove(PIECE_TYPE.O, state));
+                System.out.println(state.toString());
+                System.out.println("");
+                minimax.setPieceType(PIECE_TYPE.X);
+            }
+
+        }
 
         assertEquals(PIECE_TYPE.O, state.winner());
 
@@ -135,7 +134,7 @@ public class MinimaxTest {
 
     @Test
     public void test6() {
-        // VARIANTA C START X - REMIZA
+        // VARIANTA C START X -> REMIZA
         Minimax minimax = new Minimax(PIECE_TYPE.X);
         CELL_TYPE board[][] = new CELL_TYPE[][] { { CELL_TYPE.O, CELL_TYPE.X, CELL_TYPE._ },
                 { CELL_TYPE.X, CELL_TYPE.O, CELL_TYPE.O },
@@ -143,26 +142,121 @@ public class MinimaxTest {
 
         State state = new State(board);
 
-        // X
-        minimax.minimax(0, PIECE_TYPE.X, state);
-        state.setMove(PIECE_TYPE.X, Minimax.computerMove);
-        System.out.println(state.toString());
-        System.out.println("");
+        while (!state.isEnd()) {
 
-        // O
-        minimax.minimax(0, PIECE_TYPE.O, state);
-        state.setMove(PIECE_TYPE.O, Minimax.computerMove);
-        System.out.println(state.toString());
-        System.out.println("");
+            if (minimax.pieceType() == PIECE_TYPE.X) {
+                // X
+                state.setMove(PIECE_TYPE.X, minimax.bestMove(PIECE_TYPE.X, state));
+                System.out.println(state.toString());
+                System.out.println("");
+                minimax.setPieceType(PIECE_TYPE.O);
+            } else {
+                // O
+                state.setMove(PIECE_TYPE.O, minimax.bestMove(PIECE_TYPE.O, state));
+                System.out.println(state.toString());
+                System.out.println("");
+                minimax.setPieceType(PIECE_TYPE.X);
+            }
 
-        // X
-        minimax.minimax(0, PIECE_TYPE.X, state);
-        state.setMove(PIECE_TYPE.X, Minimax.computerMove);
-        System.out.println(state.toString());
-        System.out.println("");
+        }
 
+        assertEquals(PIECE_TYPE.DRAW, state.winner());
+
+    }
+
+    @Test
+    public void test7() {
+        // VARIANTA C START O -> O WIN
+        Minimax minimax = new Minimax(PIECE_TYPE.O);
+        CELL_TYPE board[][] = new CELL_TYPE[][] { { CELL_TYPE.O, CELL_TYPE.X, CELL_TYPE._ },
+                { CELL_TYPE.X, CELL_TYPE.O, CELL_TYPE.O },
+                { CELL_TYPE._, CELL_TYPE.X, CELL_TYPE._ } };
+
+        State state = new State(board);
+
+        while (!state.isEnd()) {
+
+            if (minimax.pieceType() == PIECE_TYPE.X) {
+                // X
+                state.setMove(PIECE_TYPE.X, minimax.bestMove(PIECE_TYPE.X, state));
+                System.out.println(state.toString());
+                System.out.println("");
+                minimax.setPieceType(PIECE_TYPE.O);
+            } else {
+                // O
+                state.setMove(PIECE_TYPE.O, minimax.bestMove(PIECE_TYPE.O, state));
+                System.out.println(state.toString());
+                System.out.println("");
+                minimax.setPieceType(PIECE_TYPE.X);
+            }
+
+        }
         assertEquals(PIECE_TYPE.O, state.winner());
 
+    }
+
+    @Test
+    public void test8() {
+        // VARIANTA D START O -> REMIZA
+        Minimax minimax = new Minimax(PIECE_TYPE.O);
+        CELL_TYPE board[][] = new CELL_TYPE[][] { { CELL_TYPE.X, CELL_TYPE.O, CELL_TYPE._ },
+                { CELL_TYPE.O, CELL_TYPE.X, CELL_TYPE._ },
+                { CELL_TYPE._, CELL_TYPE._, CELL_TYPE.O } };
+
+        State state = new State(board);
+
+        while (!state.isEnd()) {
+
+            if (minimax.pieceType() == PIECE_TYPE.X) {
+                // X
+                state.setMove(PIECE_TYPE.X, minimax.bestMove(PIECE_TYPE.X, state));
+                System.out.println(state.toString());
+                System.out.println("");
+                minimax.setPieceType(PIECE_TYPE.O);
+            } else {
+                // O
+                state.setMove(PIECE_TYPE.O, minimax.bestMove(PIECE_TYPE.O, state));
+                System.out.println(state.toString());
+                System.out.println("");
+                minimax.setPieceType(PIECE_TYPE.X);
+            }
+
+        }
+
+        assertEquals(PIECE_TYPE.DRAW, state.winner());
+
+    }
+
+    @Test
+    public void test9() {
+        // VARIANTA D START X -> X WIN
+        Minimax minimax = new Minimax(PIECE_TYPE.X);
+        CELL_TYPE board[][] = new CELL_TYPE[][] { { CELL_TYPE.X, CELL_TYPE.O, CELL_TYPE._ },
+                { CELL_TYPE._, CELL_TYPE.X, CELL_TYPE._ },
+                { CELL_TYPE._, CELL_TYPE._, CELL_TYPE.O } };
+
+        State state = new State(board);
+
+        while (!state.isEnd()) {
+
+            if (minimax.pieceType() == PIECE_TYPE.X) {
+                // X
+                state.setMove(PIECE_TYPE.X, minimax.bestMove(PIECE_TYPE.X, state));
+                System.out.println(state.toString());
+                System.out.println("");
+                minimax.setPieceType(PIECE_TYPE.O);
+            } else {
+                // O
+                state.setMove(PIECE_TYPE.O, minimax.bestMove(PIECE_TYPE.O, state));
+                System.out.println(state.toString());
+                System.out.println("");
+                minimax.setPieceType(PIECE_TYPE.X);
+            }
+
+        }
+
+
+        assertEquals(PIECE_TYPE.X, state.winner());
     }
 
 }
