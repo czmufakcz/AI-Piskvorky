@@ -56,7 +56,7 @@ public class Minimax {
             State clone = new State(state);
             clone.setMove(turn, move);
             int value = minimax(PIECE_TYPE.getReverseTurn(turn), clone);
-            if (value >= max) {
+            if (value > max) {
                 max = value;
                 maxMove = move;
             }
